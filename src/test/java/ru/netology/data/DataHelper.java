@@ -22,6 +22,12 @@ public class DataHelper {
         return new VerifiC("vasya", code);
     }
 
+    public static Transfer getTransInfo(String from, String to, int amount) { return new Transfer(from, to, amount); }
+
+    public static String getFullCardNumber(String cardNumber) {
+        return "5559 0000 0000 " + cardNumber.substring(15);
+    }
+
     public static AuthInfo generateRandomUser() {
         return new AuthInfo(faker.name().username(), faker.internet().password());
     }
@@ -40,6 +46,20 @@ public class DataHelper {
     public static class VerifiC {
         String login;
         String code;
+    }
+
+    @Value
+    public static class Card {
+        String id;
+        String number;
+        int balance;
+    }
+
+    @Value
+    public static class Transfer {
+        String from;
+        String to;
+        int amount;
     }
 
     @Data

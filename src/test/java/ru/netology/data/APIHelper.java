@@ -1,10 +1,14 @@
 package ru.netology.data;
 
+import com.google.gson.Gson;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.http.ContentType;
+import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+
+import java.util.*;
 
 import static io.restassured.RestAssured.given;
 
@@ -39,13 +43,25 @@ public class APIHelper {
         return token;
     }
 
-    public static void getCards() {
-        Response response = given()
+    public static DataHelper.Card[] getCards(String token) {
+        DataHelper.Card[] cardsInfo = given()
                 .spec(requestSpec)
+                .header("Authorization", "Bearer " + token)
                 .when().log().all()
                 .get("/api/cards")
                 .then().log().all()
-                .extract().response();
+                .extract().body().as(DataHelper.Card[].class);
+        return cardsInfo;
+    }
 
+    public static void transfer(DataHelper.Transfer transIfo, String token) {
+        given()
+                .spec(requestSpec)
+                .header("Authorization", "Bearer " + token)
+                .body(transIfo)
+                .when().log().all()
+                .post("/api/transfer")
+                .then().log().all()
+                .statusCode(200);
     }
 }
