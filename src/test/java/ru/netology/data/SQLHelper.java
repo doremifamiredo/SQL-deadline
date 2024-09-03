@@ -7,6 +7,7 @@ import org.apache.commons.dbutils.handlers.ScalarHandler;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 public class SQLHelper {
     private static QueryRunner QUERY_RUNNER = new QueryRunner();
@@ -23,6 +24,21 @@ public class SQLHelper {
         var codeSQL = "SELECT code FROM auth_codes ORDER BY created DESC LIMIT 1";
         var conn = getConn();
         return QUERY_RUNNER.query(conn, codeSQL, new ScalarHandler<>());
+    }
+
+    @SneakyThrows
+    public static String getFullCardNumber(String cardNumber) {
+        String shortNumber = cardNumber.substring(15);
+        var codeSQL = String.format("SELECT number FROM cards WHERE number LIKE '%%%s'", shortNumber);
+        var conn = getConn();
+        return QUERY_RUNNER.query(conn, codeSQL, new ScalarHandler<>());
+    }
+
+    @SneakyThrows
+    public static Timestamp getTimeOfCodeCreation() {
+        var codeCreated = "SELECT created FROM auth_codes ORDER BY created DESC LIMIT 1";
+        var conn = getConn();
+        return QUERY_RUNNER.query(conn, codeCreated, new ScalarHandler<>());
     }
 
     @SneakyThrows

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Value;
 
 import java.util.Locale;
+import java.util.Random;
 
 public class DataHelper {
     private static Faker faker = new Faker(new Locale("en"));
@@ -24,8 +25,9 @@ public class DataHelper {
 
     public static Transfer getTransInfo(String from, String to, int amount) { return new Transfer(from, to, amount); }
 
-    public static String getFullCardNumber(String cardNumber) {
-        return "5559 0000 0000 " + cardNumber.substring(15);
+    public static int generateValidAmount(int balance) {
+        Random random = new Random();
+        return random.nextInt(balance + 1);
     }
 
     public static AuthInfo generateRandomUser() {
